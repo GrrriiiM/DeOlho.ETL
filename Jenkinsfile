@@ -8,6 +8,9 @@ def exec(cmd) {
 }
 
 node {
+    stage('Git pull') {
+        checkout scm
+    }
     stage('Test') {
         exec('dotnet test src /p:CollectCoverage=true /p:Exclude="[xunit*]*" /p:CoverletOutputFormat="cobertura" /p:CoverletOutput=./coverage/"')
     }
