@@ -1,0 +1,67 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Test with coverage",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test",
+                "/p:CollectCoverage=true",
+                "/p:Exclude=\"[xunit*]*\"",
+                "/p:CoverletOutputFormat=\"cobertura\"",
+                "/p:CoverletOutput=./coverage/",
+                "${workspaceFolder}/src/DeOlho.ETL.sln"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "test"
+        },
+        {
+            "label": "Generate coverage report",
+            "type": "shell",
+            "command": "dotnet reportgenerator \"-reports:./coverage/coverage.cobertura.xml\" \"-targetdir:./coverage/report\"",
+            "dependsOn": "Test with coverage",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}/src/UnitTests"
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "View coverage report in chrome",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+            "dependsOn": "Generate coverage report",
+            "args": [
+                "${workspaceFolder}/src/UnitTests/coverage/report/index.htm"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Create nuget package",
+            "type": "shell",
+            "command": "dotnet pack ./src -c release -o ${workspaceFolder}",
+            "group": "none",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Push nuget package",
+            "type": "shell",
+            "command": "dotnet nuget push ${workspaceFolder}/DeOlho.ETL.1.0.0.nupkg -s DeOlho -k 730ebfc8d61bea02ac6a5262c8cca917",
+            "dependsOn": "Create nuget package",
+            "group": "none",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
