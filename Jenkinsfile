@@ -21,6 +21,6 @@ node {
         exec('dotnet pack src/DeOlho.ETL -c Release ')
     }
     stage('Push nuget') {
-        exec('dotnet nuget push src/DeOlho.ETL/bin/Release -s DeOlho -k 730ebfc8d61bea02ac6a5262c8cca917')
+        exec('dotnet nuget push src/DeOlho.ETL/bin/Release -s DeOlho -k 730ebfc8d61bea02ac6a5262c8cca917 || true')
     }
 }
